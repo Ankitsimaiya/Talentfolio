@@ -28,6 +28,10 @@ const userSchema = mongoose.Schema(
       minlength: 10,
       maxlength: 10,
     },
+    mediaCount: {
+      type: Number,
+      default: 0,
+    },
     social: {
       instragram: String,
       facebook: String,
