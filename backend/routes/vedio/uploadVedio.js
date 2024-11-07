@@ -2,7 +2,7 @@ const uploadOnCloudinary = require("../../cloudinary/cloudinary.js");
 const Media = require("../../db/mediaModel.js");
 
 async function uploadVedio(req, res) {
-  const { id } = req.body.user;
+  const { id } = req.user;
   const { title, description, categories } = req.body;
 
   if (!id || !title || !categories)

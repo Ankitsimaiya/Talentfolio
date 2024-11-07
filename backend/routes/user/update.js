@@ -1,8 +1,8 @@
 const User = require("../../db/userModel");
 
 async function update(req, res) {
-  const { id, name } = req.body.user;
-  const { social, contact, location } = req.body;
+  const { id, name } = req.user;
+  const { social, contact, location,bio } = req.body;
 
   const user = await User.findOne({ _id: id });
 
@@ -17,6 +17,7 @@ async function update(req, res) {
         contact: contact,
         social: social,
         location: location,
+        bio:bio
       }
     );
     return res.status(200).json({ message: "user updated successfully" });

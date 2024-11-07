@@ -7,10 +7,17 @@ const userSchema = mongoose.Schema(
       required: true,
       trim: true,
     },
+    username: {
+      type: String,
+      required: true,
+      trim: true,
+      unique: true,
+    },
     email: {
       type: String,
       required: true,
       trim: true,
+      unique: true,
     },
     password: {
       type: String,
@@ -18,7 +25,8 @@ const userSchema = mongoose.Schema(
     },
     contact: {
       type: Number,
-      length: 10,
+      minlength: 10,
+      maxlength: 10,
     },
     social: {
       instragram: String,
@@ -28,17 +36,14 @@ const userSchema = mongoose.Schema(
     location: {
       city: {
         type: String,
-        // required: true,
       },
 
       state: {
         type: String,
-        // required: true,
       },
 
       country: {
         type: String,
-        // required: true,
       },
 
       zipCode: {
@@ -48,8 +53,9 @@ const userSchema = mongoose.Schema(
     bio: {
       type: String,
     },
-    profilePic: {
+    profileUrl: {
       type: String,
+      default: "",
     },
   },
   { timestamps: true }

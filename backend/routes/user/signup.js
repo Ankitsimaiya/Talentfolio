@@ -2,9 +2,9 @@ const bcrypt = require("bcrypt");
 const User = require("../../db/userModel");
 
 const signup = async (req, res) => {
-  const { email, name, password } = req.body;
+  const { email, name, password, username } = req.body;
 
-  if (!email || !password || !name) {
+  if (!email || !password || !name || !username ) {
     return res.status(400).json("incomplete data");
   }
 
@@ -23,6 +23,7 @@ const signup = async (req, res) => {
     email: email,
     password: hashedPassword,
     name: name,
+    username:username
   });
 
   res.status(200).json({ message: "user created successfully" });

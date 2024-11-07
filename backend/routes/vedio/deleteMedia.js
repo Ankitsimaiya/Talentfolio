@@ -3,7 +3,7 @@ const cloudinary = require('cloudinary')
 
 async function deleteMedia(req, res) {
   const { id } = req.params
-  const userId = req.body.user.id
+  const userId = req.user.id
 
   if (!userId) return res.status(400).json({ message: 'please login' })
 
