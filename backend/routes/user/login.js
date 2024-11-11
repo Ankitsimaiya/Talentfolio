@@ -7,25 +7,25 @@ async function login(req, res) {
 
   // data validate
   if (!email || !password) {
-    return res.status(402).json({ message: "enter valid credencials" });
+    return res.status(204).json({ message: "enter valid credencials" });
   }
 
   //user validate
   const isUser = await User.findOne({ email: email });
   if (!isUser) {
-    return res.status(200).json({ message: "User not found" });
+    return res.status(203).json({ message: "User not found" });
   }
 
   //password match
   const match = await bcrypt.compare(password, isUser.password);
   if (!match) {
-    return res.status(200).json({ message: " incorrect password" });
+    return res.status(203).json({ message: " incorrect password" });
   }
 
   //token genrate
   const token = jwt.sign(
     {
-      id: isUser._id,
+      id: isUser._id, 
       name: isUser.name,
     },
     process.env.JWT_SECRET,
