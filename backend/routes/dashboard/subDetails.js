@@ -22,7 +22,7 @@ const subdetails = async (req, res) => {
           description: 1,
           category: 1,
           url:1,
-          "userDetails.username": 1, // Include specific user fields here
+          "userDetails.username": 1, // Include specific user  fields here
           "userDetails.profileUrl": 1
         }
       }
