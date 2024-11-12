@@ -7,6 +7,8 @@ import Footer from "./components/Footer";
 import Register from "./components/Register";
 import Login from "./components/Login";
 import ProfilePage from "./components/Profile";
+import MediaUploadForm from "./components/Media";
+import UpdateProfilePage from "./components/UpdateProfile";
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
           <Route path="/register" element={<Register/>} />
           <Route path="/login" element={<Login/>} />
           <Route path="/profile" element={<ProfilePage/>}  />
+          <Route path="/media" element={<MediaUploadForm/>}  />
+          <Route path="/update-profile" element={<UpdateProfilePage/>}  />
         </Routes>
         <Footer/>
       </Router>

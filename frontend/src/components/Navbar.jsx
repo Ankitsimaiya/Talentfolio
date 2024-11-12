@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 function TalentfolioNavbar() {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false); // To toggle the mobile menu
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <nav className="bg-gray-900 p-4">
