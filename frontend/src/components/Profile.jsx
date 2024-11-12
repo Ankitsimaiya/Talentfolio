@@ -3,10 +3,12 @@ import React, { useEffect, useState } from "react";
 import cookies from "js-cookie";
 import axios from "axios";
 import MediaUploadModal from "./Media"; // Modal for uploading media
-// import {} from "fa-icon" 
+import UpdateProfilePhotoModal from "./UpdateProfilePhoto";
+// import {} from "fa-icon"
 
 function ProfilePage() {
   const [data, setData] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [showModal, setShowModal] = useState(false); // State to control modal visibility
   const token = cookies.get("token");
 
@@ -16,11 +18,14 @@ function ProfilePage() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/api/v1/profile/details", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        "http://localhost:3000/api/v1/profile/details",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setData(response.data);
     } catch (error) {
       console.error("Error fetching profile data", error);
@@ -38,26 +43,42 @@ function ProfilePage() {
       <div className="container mx-auto max-w-4xl bg-white rounded-lg shadow-lg p-8">
         {/* User Info Section */}
         <section className="text-center mb-8">
-          <img
-            src={user.profileUrl || "https://via.placeholder.com/100"}
-            alt="User Avatar"
-            className="w-32 h-32 rounded-full mb-4 mx-auto" // Adjust size of the profile image
-          />
           <div>
-            <p className="text-2xl font-semibold">{user.name }</p>
+            <img
+              src={user.profileUrl || "https://via.placeholder.com/100"}
+              alt="User Avatar"
+              className="w-32 h-32 rounded-full mb-4 mx-auto" // Adjust size of the profile image
+              onClick={() => setIsModalOpen(true)}
+            />
+
+            {/* Profile Photo Modal */}
+            <UpdateProfilePhotoModal
+              isOpen={isModalOpen}
+              onClose={() => setIsModalOpen(false)}
+              currentPhotoUrl={user.profileUrl}
+            />
+          </div>
+
+          <div>
+            <p className="text-2xl font-semibold">{user.name}</p>
             <p className="text-gray-600"> {user.username}</p>
-            
-            <p className="text-gray-600"> {user.bio }</p>
-           
+
+            <p className="text-gray-600"> {user.bio}</p>
+
             <p className="text-gray-600">
-              Location: {user.location ? `${user.location.city}, ${user.location.state}` : "Not Available"}
+              Location:{" "}
+              {user.location
+                ? `${user.location.city}, ${user.location.state}`
+                : "Not Available"}
             </p>
           </div>
         </section>
 
         {/* Social Media Links */}
         <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4 text-gray-800">Social Links</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-gray-800">
+            Social Links
+          </h2>
           <div className="flex justify-center space-x-6">
             {user.social?.instagram && (
               <a
@@ -94,10 +115,12 @@ function ProfilePage() {
 
         {/* Media Details Section */}
         <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4 text-gray-800">Media Details</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-gray-800">
+            Media Details
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {media.map((item) => (
-              <div key={item._id} className="bg-gray-200 p-4 rounded-lg">
+              <div key={item._id} className=" p-4 rounded-lg">
                 {/* Conditionally render media based on media type */}
                 {item.mediaType === "image" ? (
                   <img
@@ -118,7 +141,9 @@ function ProfilePage() {
                 <p className="text-gray-600">{item.description}</p>
                 <p className="text-gray-600">Category: {item.categories}</p>
                 <p className="text-gray-600">Type: {item.mediaType}</p>
-                <p className="text-gray-600">Views: {item.view} | Likes: {item.like}</p>
+                <p className="text-gray-600">
+                  Views: {item.view} | Likes: {item.like}
+                </p>
               </div>
             ))}
           </div>
@@ -135,7 +160,9 @@ function ProfilePage() {
 
         {/* Contact Details Section */}
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-gray-800">Contact Details</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-gray-800">
+            Contact Details
+          </h2>
           <div className="flex flex-col space-y-4">
             <div className="bg-gray-200 p-4 rounded-lg">
               <p className="text-gray-800 font-semibold">Email</p>
@@ -143,14 +170,23 @@ function ProfilePage() {
             </div>
             <div className="bg-gray-200 p-4 rounded-lg">
               <p className="text-gray-800 font-semibold">Location</p>
-              <p className="text-gray-600">{user.location ? `${user.location.city}, ${user.location.state}` : "Not Available"}</p>
+              <p className="text-gray-600">
+                {user.location
+                  ? `${user.location.city}, ${user.location.state}`
+                  : "Not Available"}
+              </p>
             </div>
           </div>
         </section>
       </div>
 
       {/* Modal for Media Upload */}
-      {showModal && <MediaUploadModal onClose={() => setShowModal(false)} fetchData={fetchData} />}
+      {showModal && (
+        <MediaUploadModal
+          onClose={() => setShowModal(false)}
+          fetchData={fetchData}
+        />
+      )}
     </div>
   );
 }

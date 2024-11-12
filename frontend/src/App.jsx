@@ -9,6 +9,7 @@ import Login from "./components/Login";
 import ProfilePage from "./components/Profile";
 import MediaUploadForm from "./components/Media";
 import UpdateProfilePage from "./components/UpdateProfile";
+import UpdateProfilePhotoPage from "./components/UpdateProfilePhoto";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/profile" element={<ProfilePage/>}  />
           <Route path="/media" element={<MediaUploadForm/>}  />
           <Route path="/update-profile" element={<UpdateProfilePage/>}  />
+          <Route path="/update-profile-photo" element={<UpdateProfilePhotoPage/>}  />
         </Routes>
         <Footer/>
       </Router>
