@@ -1,101 +1,126 @@
-// src/components/TalentfolioNavbar.jsx
-import React, { useState } from 'react';
-import { FaSearch, FaBars, FaTimes } from 'react-icons/fa'; // Import hamburger and close icons
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState, useRef } from 'react';
+import { FaSearch, FaUserCircle } from 'react-icons/fa';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import { toast } from 'react-toastify';
+const Base_url = import.meta.env.VITE_BASE_URL
 
 function TalentfolioNavbar() {
-  const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const [isMobileMenuOpen, setMobileMenuOpen] = useState(false); // To toggle the mobile menu
-  const [isOpen, setIsOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [username, setUsername] = useState('');
+  const [userId, setUserId] = useState('');
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const token = Cookies.get('token');
+    const storedUser = localStorage.getItem('user');
+    const user = storedUser ? JSON.parse(storedUser) : null;
+
+    if (token && user) {
+      setIsLoggedIn(true);
+      setUsername(user.username);
+      setUserId(user._id);
+    } else {
+      setIsLoggedIn(false);
+      setUsername('');
+    }
+  }, [location]);
+
+  const handleLogout = () => {
+    Cookies.remove('token');
+    localStorage.removeItem('user');
+    setIsLoggedIn(false);
+    toast.info('User Logged Out');
+    navigate('/');
+  };
+
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setDropdownOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   return (
-    <nav className="bg-gray-900 p-4">
-      <div className=" mx-auto flex items-center justify-between">
+    <nav className="bg-[#F8FAF5] border-b border-emerald-100 shadow-md sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
+
         {/* Logo */}
-        <div className="text-white font-bold text-xl">
-          <a href="/">Talentfolio</a>
-        </div>
+        <Link to="/" className="flex-shrink-0">
+          <img src="/logo.png" alt="Talentfolio Logo" className="w-16 sm:w-20 h-auto" />
+        </Link>
 
-        {/* Search Bar with Search Icon */}
-        <div className=" items-center flex-1 mx-4 max-w-lg relative hidden sm:flex">
-          <input
-            type="text"
-            placeholder="Search..."
-            className="w-full pl-10 pr-4 py-2 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
-          />
-          <FaSearch className="absolute left-3 text-gray-400" />
-        </div>
-
-        {/* Menu Items */}
-        <div className="hidden md:flex items-center space-x-4">
-          {/* Categories Dropdown */}
-          <div className="relative">
-            <button
-              onClick={() => setDropdownOpen(!isDropdownOpen)}
-              className="text-white px-4 py-2 rounded-lg hover:bg-gray-700 focus:outline-none"
-            >
-              Categories
-            </button>
-            {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white text-black rounded-md shadow-lg z-10">
-                <a href="#" className="block px-4 py-2 hover:bg-gray-200">
-                  Category 1
-                </a>
-                <a href="#" className="block px-4 py-2 hover:bg-gray-200">
-                  Category 2
-                </a>
-                <a href="#" className="block px-4 py-2 hover:bg-gray-200">
-                  Category 3
-                </a>
-              </div>
-            )}
-          </div>
-
-          {/* Register and Login buttons */}
-          <Link to="/register" className="text-white px-4 py-2 rounded-lg hover:bg-gray-700">
-            Register
-          </Link>
-          <Link to="/login" className="text-white px-4 py-2 rounded-lg hover:bg-gray-700">
-            Login
-          </Link>
-        </div>
-
-        {/* Hamburger Menu for Mobile */}
-        <div className="md:hidden flex items-center">
-          <button
-            onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
-            className="text-white text-2xl"
-          >
-            {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Menu */}
-      <div
-        className={`md:hidden ${isMobileMenuOpen ? 'block' : 'hidden'} bg-gray-800 text-white`}
-      >
-        <div className="flex flex-col items-center py-4">
-          {/* Search Bar for Mobile */}
-          <div className="relative mb-4 w-11/12">
+        {/* Search Bar (center aligned and flexible) */}
+        <div className="flex-grow order-3 sm:order-none w-full sm:w-auto mt-2 sm:mt-0">
+          <div className="relative w-full">
             <input
               type="text"
-              placeholder="Search..."
-              className="w-full pl-10 pr-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+              placeholder="Search by title..."
+              className="w-full pl-10 pr-4 py-2 border border-emerald-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white text-gray-800 placeholder-gray-500 transition"
             />
-            <FaSearch className="absolute left-3 text-gray-400" />
+            <FaSearch className="absolute left-3 top-3 text-gray-400" />
           </div>
+        </div>
 
-          {/* Menu Items for Mobile */}
-          <Link to="/categories" className="px-4 py-2 w-full text-center hover:bg-gray-700">
-            Categories
-          </Link>
-          <Link to="/register" className="px-4 py-2 w-full text-center hover:bg-gray-700">
-            Register
-          </Link>
-          <Link to="/login" className="px-4 py-2 w-full text-center hover:bg-gray-700">
-            Login
-          </Link>
+        {/* User section */}
+        <div className="relative flex-shrink-0" ref={dropdownRef}>
+          {isLoggedIn ? (
+            <>
+              <button
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+                className="flex items-center gap-2 text-[#1F2937] font-medium"
+              >
+                <FaUserCircle className="text-2xl sm:text-3xl text-emerald-500" />
+                <span className="hidden sm:inline">{username}</span>
+              </button>
+
+              {dropdownOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white border border-emerald-100 rounded-lg shadow-md z-50">
+                  <button
+                    onClick={() => {
+                      setDropdownOpen(false);
+                      navigate(`/profile/${userId}`);
+                    }}
+                    className="block w-full text-left px-4 py-2 hover:bg-emerald-50"
+                  >
+                    View Profile
+                  </button>
+                  <button
+                    onClick={() => {
+                      setDropdownOpen(false);
+                      navigate(`/update-profile/${userId}`);
+                    }}
+                    className="block w-full text-left px-4 py-2 hover:bg-emerald-50"
+                  >
+                    Update Profile
+                  </button>
+                  <button
+                    onClick={() => {
+                      setDropdownOpen(false);
+                      handleLogout();
+                    }}
+                    className="block w-full text-left px-4 py-2 hover:bg-emerald-50 text-red-500"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </>
+          ) : (
+            <Link
+              to="/login"
+              className="text-[#10B981] border border-[#10B981] px-4 py-2 rounded-lg hover:bg-[#10B981] hover:text-white transition"
+            >
+              Login
+            </Link>
+          )}
         </div>
       </div>
     </nav>
