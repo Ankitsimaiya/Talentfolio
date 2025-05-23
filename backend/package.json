@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js",
-     "build": "echo 'No build step needed'"
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "build": "echo 'No build step needed'"
   },
   "author": "Ankit Simaiya",
   "license": "ISC",
